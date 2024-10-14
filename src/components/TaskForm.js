@@ -22,13 +22,16 @@ const TaskForm = ({ addTask }) => {
     }
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/tasks", {
-        title,
-        description,
-        dueDate: new Date(dueDate),
-        priority,
-        completed: false,
-      });
+      const response = await axios.post(
+        "https://to-do-app-seven-lake.vercel.app",
+        {
+          title,
+          description,
+          dueDate: new Date(dueDate),
+          priority,
+          completed: false,
+        }
+      );
       addTask(response.data);
       setTitle("");
       setDescription("");

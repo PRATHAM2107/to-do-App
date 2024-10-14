@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5000/tasks";
+const API_URL = "https://to-do-app-seven-lake.vercel.app";
 
 // Get all tasks
 export const getTasks = async () => {

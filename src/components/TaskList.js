@@ -2,6 +2,12 @@ import React from "react";
 import TaskItem from "./TaskItem";
 
 const TaskList = ({ tasks, toggleTaskCompletion, editTask, deleteTask }) => {
+  // Ensure tasks is an array
+  if (!Array.isArray(tasks)) {
+    console.error("Tasks prop is not an array:", tasks);
+    return <li>Error: Tasks data is not available.</li>; // Display an error message
+  }
+
   return (
     <ul>
       {tasks.length === 0 ? (

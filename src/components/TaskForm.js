@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const TaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");
@@ -22,16 +23,13 @@ const TaskForm = ({ addTask }) => {
     }
     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://to-do-app-seven-lake.vercel.app",
-        {
-          title,
-          description,
-          dueDate: new Date(dueDate),
-          priority,
-          completed: false,
-        }
-      );
+      const response = await axios.post(API_URL, {
+        title,
+        description,
+        dueDate: new Date(dueDate),
+        priority,
+        completed: false,
+      });
       addTask(response.data);
       setTitle("");
       setDescription("");

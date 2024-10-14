@@ -1,51 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
+import "./App.css";
 import {
   getTasks,
   createTask,
   updateTask,
   deleteTask,
-} from "./services/taskService"; // Import the service methods
-import "./App.css"; // Import the CSS styles
+} from "./services/taskService";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Load tasks from the backend on component mount
   useEffect(() => {
     const loadTasks = async () => {
-      const tasksData = await getTasks();
-      setTasks(tasksData);
+      try {
+        const tasksData = await getTasks();
+        setTasks(tasksData);
+      } catch (error) {
+        setError("Failed to load tasks.");
+        console.error("Failed to load tasks:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-
     loadTasks();
   }, []);
 
-  // Add a new task with title, description, due date, and priority
-  const addTask = async (title, description, dueDate, priority) => {
-    const newTask = {
-      title,
-      description,
-      dueDate,
-      priority,
-      completed: false,
-    };
+  const addTask = useCallback(async (newTask) => {
+    try {
+      const createdTask = await createTask(newTask);
+      setTasks((prevTasks) => [...prevTasks, createdTask]);
+    } catch (error) {
+      setError(
+        error.response ? error.response.data.message : "Error creating task."
+      );
+      console.error("Error creating task:", error);
+    }
+  }, []);
 
-    const createdTask = await createTask(newTask); // Create task in backend
-    setTasks([...tasks, createdTask]); // Update local state with new task
-  };
-
-  // Toggle task completion
   const toggleTaskCompletion = async (id) => {
     const taskToUpdate = tasks.find((task) => task._id === id);
     const updatedTask = { ...taskToUpdate, completed: !taskToUpdate.completed };
-
-    await updateTask(id, updatedTask); // Update task in backend
-    setTasks(tasks.map((task) => (task._id === id ? updatedTask : task))); // Update local state
+    try {
+      await updateTask(id, updatedTask);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task._id === id ? updatedTask : task))
+      );
+    } catch (error) {
+      setError("Error updating task.");
+      console.error("Error updating task:", error);
+    }
   };
 
-  // Edit task details
   const editTask = async (
     id,
     newTitle,
@@ -58,33 +67,50 @@ const App = () => {
       description: newDescription,
       dueDate: newDueDate,
       priority: newPriority,
-      completed: false, // Reset completion status if needed
+      completed: false,
     };
-
-    await updateTask(id, updatedTask); // Update task in backend
-    setTasks(
-      tasks.map((task) =>
-        task._id === id ? { ...task, ...updatedTask } : task
-      )
-    ); // Update local state
+    try {
+      await updateTask(id, updatedTask);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === id ? { ...task, ...updatedTask } : task
+        )
+      );
+    } catch (error) {
+      setError("Error editing task.");
+      console.error("Error editing task:", error);
+    }
   };
 
-  // Delete a task
   const handleDeleteTask = async (id) => {
-    await deleteTask(id); // Delete task in backend
-    setTasks(tasks.filter((task) => task._id !== id)); // Update local state
+    try {
+      await deleteTask(id);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      setError("Error deleting task.");
+      console.error("Error deleting task:", error);
+    }
   };
 
   return (
     <div className="App">
       <h1>To-Do App</h1>
-      <TaskForm addTask={addTask} />
-      <TaskList
-        tasks={tasks}
-        toggleTaskCompletion={toggleTaskCompletion}
-        editTask={editTask}
-        deleteTask={handleDeleteTask}
-      />
+      {loading ? (
+        <p>Loading tasks...</p>
+      ) : (
+        <>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <TaskForm addTask={addTask} />
+          <TaskList
+            tasks={tasks}
+            toggleTaskCompletion={toggleTaskCompletion}
+            editTask={editTask}
+            deleteTask={handleDeleteTask}
+          />
+        </>
+      )}
     </div>
   );
 };
+
+export default App;

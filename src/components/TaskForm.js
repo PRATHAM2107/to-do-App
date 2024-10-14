@@ -1,50 +1,43 @@
-import React, { useState } from "react";
-import axios from "axios"; // Import Axios
+import React, { useState, useCallback } from "react";
+import axios from "axios";
 
 const TaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [priority, setPriority] = useState("Low"); // Default to 'Low' priority
+  const [priority, setPriority] = useState("Low");
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = useCallback(
+    (setter) => (e) => {
+      setter(e.target.value);
+    },
+    []
+  );
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    // Basic validation: Ensure title, description, and dueDate are not empty
+    e.preventDefault();
     if (!title.trim() || !description.trim() || !dueDate) {
-      console.error("All fields are required.");
-      return; // Exit if validation fails
+      return;
     }
-
+    setLoading(true);
     try {
-      // Send a POST request to the backend API
       const response = await axios.post("http://localhost:5000/tasks", {
         title,
         description,
-        dueDate: new Date(dueDate), // Convert dueDate to Date object
+        dueDate: new Date(dueDate),
         priority,
         completed: false,
       });
-
-      // Call addTask to update the local state if needed
-      addTask(
-        response.data.title,
-        response.data.description,
-        response.data.dueDate,
-        response.data.priority
-      );
-
-      // Reset form fields after successful submission
+      addTask(response.data);
       setTitle("");
       setDescription("");
       setDueDate("");
-      setPriority("Low"); // Reset to 'Low' priority
+      setPriority("Low");
     } catch (error) {
-      // Log any errors to the console
-      console.error(
-        "Error adding task:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error adding task:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,28 +47,30 @@ const TaskForm = ({ addTask }) => {
         type="text"
         placeholder="Add a new task"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleInputChange(setTitle)}
         required
       />
       <input
         type="text"
         placeholder="Short description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={handleInputChange(setDescription)}
         required
       />
       <input
         type="date"
         value={dueDate}
-        onChange={(e) => setDueDate(e.target.value)}
+        onChange={handleInputChange(setDueDate)}
         required
       />
-      <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+      <select value={priority} onChange={handleInputChange(setPriority)}>
         <option value="Low">Low</option>
         <option value="Medium">Medium</option>
         <option value="High">High</option>
       </select>
-      <button type="submit">Add Task</button>
+      <button type="submit" disabled={loading}>
+        Add Task
+      </button>
     </form>
   );
 };

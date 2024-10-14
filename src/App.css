@@ -1,38 +1,156 @@
+/* General App Styling */
 .App {
+  font-family: Arial, sans-serif;
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: #e0f7fa; /* Light blue background */
+  color: #004d40; /* Dark teal text */
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
+}
+
+/* TaskForm Styling */
+form {
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="date"] {
+  padding: 10px;
+  width: 300px;
+  border: 2px solid #00796b; /* Green border */
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+select {
+  padding: 10px;
+  border: 2px solid #00796b; /* Green border */
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #00796b; /* Green button */
   color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #004d40; /* Darker green on hover */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* TaskList Styling */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #ffffff; /* White background for each task */
+  border: 1px solid #b2dfdb; /* Light green border */
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+/* TaskItem Styling */
+li div {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 10px;
+}
+
+li span {
+  font-weight: bold;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5);
+  margin-right: 10px;
+}
+
+/* Completed task style */
+.done-label {
+  color: green; /* Change "Marked as Done" text color to green */
+}
+
+/* Green checkbox style for completed tasks */
+.green-checkbox {
+  accent-color: green; /* Change checkbox color to green */
+}
+
+/* Custom checkbox styling */
+input[type="checkbox"] {
+  appearance: none; /* Remove default checkbox appearance */
+  -webkit-appearance: none; /* Remove default checkbox appearance in Webkit browsers */
+  width: 20px; /* Set width */
+  height: 20px; /* Set height */
+  border: 2px solid #00796b; /* Green border */
+  border-radius: 5px; /* Round edges */
+  position: relative; /* Position relative for the checkmark */
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+/* Style for checked state */
+input[type="checkbox"]:checked {
+  background-color: green; /* Background color when checked */
+  border-color: green; /* Border color when checked */
+}
+
+/* Custom checkmark */
+input[type="checkbox"]:checked::after {
+  content: ""; /* Create a pseudo-element */
+  position: absolute; /* Position it absolutely */
+  left: 5px; /* Position the checkmark */
+  top: 1px; /* Adjust the top position */
+  width: 5px; /* Width of the checkmark */
+  height: 10px; /* Height of the checkmark */
+  border: solid white; /* Color of the checkmark */
+  border-width: 0 2px 2px 0; /* Create the checkmark shape */
+  transform: rotate(45deg); /* Rotate to create a checkmark */
+}
+
+/* Button Styles */
+li button {
+  margin-left: 10px;
+  background-color: #004d40; /* Dark teal button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+li button:hover {
+  background-color: #00796b; /* Lighter green on hover */
+}
+
+/* Due Date and Priority Styling */
+li p {
+  margin: 5px 0;
+  color: #105c78; /* Greyish text for descriptions */
+}
+
+li p span.due-date,
+li p span.priority {
+  font-weight: bold;
+}
+
+li p span.priority.Low {
+  color: green;
+}
+
+li p span.priority.Medium {
+  color: orange;
+}
+
+li p span.priority.High {
+  color: red;
 }

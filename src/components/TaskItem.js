@@ -4,14 +4,16 @@ const TaskItem = ({ task, toggleTaskCompletion, editTask, deleteTask }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(task.title);
   const [newDescription, setNewDescription] = useState(task.description);
-  const [newDueDate, setNewDueDate] = useState(task.dueDate);
+  const [newDueDate, setNewDueDate] = useState(
+    task.dueDate ? task.dueDate.split("T")[0] : ""
+  ); // Ensure it's in date format
   const [newPriority, setNewPriority] = useState(task.priority);
 
   // Use useEffect to update local state when task changes
   useEffect(() => {
     setNewTitle(task.title);
     setNewDescription(task.description);
-    setNewDueDate(task.dueDate);
+    setNewDueDate(task.dueDate ? task.dueDate.split("T")[0] : ""); // Format correctly for input
     setNewPriority(task.priority);
   }, [task]);
 

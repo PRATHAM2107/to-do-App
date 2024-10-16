@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://to-do-app-backend-chi.vercel.app";
 
 const TaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");

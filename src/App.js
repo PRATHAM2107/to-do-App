@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-import "./App.css";
+import "./App.css"; // Ensure your CSS includes styles for the loading spinner
 import {
   getTasks,
   createTask,
@@ -20,7 +20,12 @@ const App = () => {
         const tasksData = await getTasks();
         setTasks(tasksData);
       } catch (error) {
-        setError("Failed to load tasks.");
+        // Check if error response exists and log it
+        const message =
+          error.response && error.response.data
+            ? error.response.data.message
+            : "Failed to load tasks.";
+        setError(message);
         console.error("Failed to load tasks:", error);
       } finally {
         setLoading(false);
@@ -28,7 +33,6 @@ const App = () => {
     };
     loadTasks();
   }, []);
-
   const addTask = useCallback(async (newTask) => {
     try {
       const createdTask = await createTask(newTask);
@@ -96,7 +100,7 @@ const App = () => {
     <div className="App">
       <h1>To-Do App</h1>
       {loading ? (
-        <p>Loading tasks...</p>
+        <div className="spinner"></div> // Loading spinner
       ) : (
         <>
           {error && <p style={{ color: "red" }}>{error}</p>}

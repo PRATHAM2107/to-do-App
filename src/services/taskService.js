@@ -1,5 +1,8 @@
 import axios from "axios";
-const API_URL = process.env.REACT_APP_API_URL;
+
+const API_URL = "http://localhost:5000";
+
+console.log("API URL:", API_URL); // Check if API_URL is set correctly
 
 // Get all tasks
 export const getTasks = async () => {
@@ -7,6 +10,7 @@ export const getTasks = async () => {
     const response = await axios.get(`${API_URL}/tasks`);
     return response.data;
   } catch (error) {
+    console.error("Error fetching tasks:", error.response || error.message);
     throw error;
   }
 };
@@ -17,6 +21,7 @@ export const createTask = async (task) => {
     const response = await axios.post(`${API_URL}/tasks`, task);
     return response.data;
   } catch (error) {
+    console.error("Error creating task:", error.response || error.message);
     throw error;
   }
 };
@@ -27,6 +32,7 @@ export const updateTask = async (id, updatedTask) => {
     const response = await axios.put(`${API_URL}/tasks/${id}`, updatedTask);
     return response.data;
   } catch (error) {
+    console.error("Error updating task:", error.response || error.message);
     throw error;
   }
 };
@@ -36,6 +42,7 @@ export const deleteTask = async (id) => {
   try {
     await axios.delete(`${API_URL}/tasks/${id}`);
   } catch (error) {
+    console.error("Error deleting task:", error.response || error.message);
     throw error;
   }
 };
